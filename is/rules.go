@@ -9,8 +9,8 @@ import (
 	"regexp"
 	"unicode"
 
-	"github.com/asaskevich/govalidator"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/asaskevich/govalidator/v12"
+	validation "github.com/omid9h/ozzo-validation/v4"
 )
 
 var (
@@ -33,7 +33,7 @@ var (
 	// ErrUTFDigit is the error that returns in case of an invalid utf digit value.
 	ErrUTFDigit = validation.NewError("validation_is_utf_digit", "must contain unicode decimal digits only")
 	// ErrUTFLetterNumeric is the error that returns in case of an invalid utf numeric or letter value.
-	ErrUTFLetterNumeric = validation.NewError("validation_is utf_letter_numeric", "must contain unicode letters and numbers only")
+	ErrUTFLetterNumeric = validation.NewError("validation_is_utf_letter_numeric", "must contain unicode letters and numbers only")
 	// ErrUTFNumeric is the error that returns in case of an invalid utf numeric value.
 	ErrUTFNumeric = validation.NewError("validation_is_utf_numeric", "must contain unicode number characters only")
 	// ErrLowerCase is the error that returns in case of an invalid lower case value.
@@ -246,7 +246,7 @@ var (
 	// Domain regex source: https://stackoverflow.com/a/7933253
 	// Slightly modified: Removed 255 max length validation since Go regex does not
 	// support lookarounds. More info: https://stackoverflow.com/a/38935027
-	reDomain = regexp.MustCompile(`^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-z0-9])?\.)+(?:[a-zA-Z]{1,63}| xn--[a-z0-9]{1,59})$`)
+	reDomain = regexp.MustCompile(`^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{1,63}|xn--[a-z0-9]{1,59})$`)
 )
 
 func isISBN(value string) bool {

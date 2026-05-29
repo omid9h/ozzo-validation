@@ -24,6 +24,19 @@ func TestMultipleOf(t *testing.T) {
 	assert.Equal(t, nil, r3.Validate(uint(20)))
 	assert.Equal(t, "cannot convert float32 to uint64", r3.Validate(float32(20)).Error())
 
+	// pointers should be dereferenced, like Min/Max
+	n := 20
+	assert.Equal(t, nil, r.Validate(&n))
+	var np *int
+	assert.Equal(t, nil, r.Validate(np))
+	// an empty value is considered valid
+	assert.Equal(t, nil, r.Validate(0))
+
+	// a zero base must not panic with a division by zero
+	r4 := MultipleOf(0)
+	assert.Equal(t, "base cannot be zero", r4.Validate(5).Error())
+	r5 := MultipleOf(uint(0))
+	assert.Equal(t, "base cannot be zero", r5.Validate(uint(5)).Error())
 }
 
 func Test_MultipleOf_Error(t *testing.T) {

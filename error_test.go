@@ -70,6 +70,20 @@ func TestErrors_Filter(t *testing.T) {
 	assert.Nil(t, errs.Filter())
 }
 
+func TestErrorObject_Error(t *testing.T) {
+	// no params: message returned verbatim
+	err := NewError("code", "must be no less than {{.threshold}}")
+	assert.Equal(t, "must be no less than {{.threshold}}", err.Error())
+
+	// params: message is rendered as a template
+	err = err.SetParams(map[string]interface{}{"threshold": 10})
+	assert.Equal(t, "must be no less than 10", err.Error())
+
+	// invalid template syntax must not panic; the raw message is returned
+	err = NewError("code", "bad {{.template").SetParams(map[string]interface{}{"a": 1})
+	assert.Equal(t, "bad {{.template", err.Error())
+}
+
 func TestErrorObject_SetCode(t *testing.T) {
 	err := NewError("A", "msg").(ErrorObject)
 

@@ -10,6 +10,7 @@ var ErrMultipleOfInvalid = NewError("validation_multiple_of_invalid", "must be m
 
 // MultipleOf returns a validation rule that checks if a value is a multiple of the "base" value.
 // Note that "base" should be of integer type.
+// An empty value is considered valid. Use the Required rule to make sure a value is not empty.
 func MultipleOf(base interface{}) MultipleOfRule {
 	return MultipleOfRule{
 		base: base,
@@ -37,24 +38,37 @@ func (r MultipleOfRule) ErrorObject(err Error) MultipleOfRule {
 
 // Validate checks if the value is a multiple of the "base" value.
 func (r MultipleOfRule) Validate(value interface{}) error {
+	value, isNil := Indirect(value)
+	if isNil || IsEmpty(value) {
+		return nil
+	}
+
 	rv := reflect.ValueOf(r.base)
 	switch rv.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		base := rv.Int()
+		if base == 0 {
+			return fmt.Errorf("base cannot be zero")
+		}
 		v, err := ToInt(value)
 		if err != nil {
 			return err
 		}
-		if v%rv.Int() == 0 {
+		if v%base == 0 {
 			return nil
 		}
 
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		base := rv.Uint()
+		if base == 0 {
+			return fmt.Errorf("base cannot be zero")
+		}
 		v, err := ToUint(value)
 		if err != nil {
 			return err
 		}
 
-		if v%rv.Uint() == 0 {
+		if v%base == 0 {
 			return nil
 		}
 	default:

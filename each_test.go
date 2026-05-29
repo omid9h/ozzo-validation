@@ -32,6 +32,8 @@ func TestEach(t *testing.T) {
 		{"t12", []interface{}{struct{ foo string }{"foo"}}, ""},
 		{"t13", []interface{}{nil, a}, "0: cannot be blank; 1: cannot be blank."},
 		{"t14", []interface{}{c0, c1, f}, "0: cannot be blank."},
+		// non-string map keys must be formatted with %v, not reflect.Value.String()
+		{"t15", map[int]string{7: ""}, "7: cannot be blank."},
 	}
 
 	for _, test := range tests {

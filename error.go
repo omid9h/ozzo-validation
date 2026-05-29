@@ -106,8 +106,15 @@ func (e ErrorObject) Error() string {
 		return e.message
 	}
 
+	tmpl, err := template.New("err").Parse(e.message)
+	if err != nil {
+		return e.message
+	}
+
 	res := bytes.Buffer{}
-	_ = template.Must(template.New("err").Parse(e.message)).Execute(&res, e.params)
+	if err := tmpl.Execute(&res, e.params); err != nil {
+		return e.message
+	}
 
 	return res.String()
 }

@@ -27,6 +27,9 @@ func TestNotIn(t *testing.T) {
 		{"t5", []interface{}{1, 2}, "1", ""},
 		{"t6", []interface{}{1, 2}, &v, "must not be in list"},
 		{"t7", []interface{}{1, 2}, v2, ""},
+		// uncomparable types must not panic (compared with reflect.DeepEqual, like In)
+		{"t8", []interface{}{[]int{1, 2}}, []int{1, 2}, "must not be in list"},
+		{"t9", []interface{}{[]int{1, 2}}, []int{3, 4}, ""},
 	}
 
 	for _, test := range tests {

@@ -7,6 +7,7 @@ package validation
 import (
 	"context"
 	"errors"
+	"fmt"
 	"reflect"
 	"strconv"
 )
@@ -90,8 +91,10 @@ func (r EachRule) getString(value reflect.Value) string {
 		if value.IsNil() {
 			return ""
 		}
-		return value.Elem().String()
-	default:
+		return r.getString(value.Elem())
+	case reflect.String:
 		return value.String()
+	default:
+		return fmt.Sprintf("%v", value.Interface())
 	}
 }

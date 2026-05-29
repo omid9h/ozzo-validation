@@ -4,6 +4,10 @@
 
 package validation
 
+import (
+	"reflect"
+)
+
 // ErrNotInInvalid is the error that returns when a value is in a list.
 var ErrNotInInvalid = NewError("validation_not_in_invalid", "must not be in list")
 
@@ -31,7 +35,7 @@ func (r NotInRule) Validate(value interface{}) error {
 	}
 
 	for _, e := range r.elements {
-		if e == value {
+		if reflect.DeepEqual(e, value) {
 			return r.err
 		}
 	}
